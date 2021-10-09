@@ -7,7 +7,7 @@ package com.jgybzx.isworkday.utils;
  */
 public enum WeekEnum {
     /**
-     * 周一
+     * 星期
      */
     MON(1, "星期一"),
     TUE(2, "星期二"),
