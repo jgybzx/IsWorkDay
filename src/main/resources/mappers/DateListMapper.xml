@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jgybzx.isworkday.mappers.DateListMapper">
+
+    <resultMap id="baseResultMap" type="com.jgybzx.isworkday.model.DateList">
+        <id column="uuid" property="uuid"/>
+        <result column="date" property="date"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <insert id="saveList" parameterType="java.util.ArrayList">
+        INSERT INTO datelist(uuid,date, status)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            UUID(),
+            #{item.date},
+            #{item.status}
+            )
+        </foreach>
+
+    </insert>
+    <select id="getHolidayListCurrentMonth" resultMap="baseResultMap">
+        SELECT *
+        FROM datelist
+        WHERE datelist.date BETWEEN #{firstDay} AND #{lastDay}
+    </select>
+    <select id="isHoliday" resultMap="baseResultMap">
+        SELECT *
+        FROM datelist
+        WHERE datelist.date = #{currentDay}
+    </select>
+</mapper>

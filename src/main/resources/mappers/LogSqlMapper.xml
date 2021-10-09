@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jgybzx.isworkday.mappers.LogSqlMapper">
+
+    <insert id="saveLogByModel" parameterType="com.jgybzx.isworkday.entity.LogSql">
+        insert into logsql(log_id, sql_str, method_name, method_url, request_url, create_date)
+        values
+        (#{logId},
+        #{sqlStr},
+        #{methodName},
+        #{methodUrl},
+        #{requestUrl},
+        NOW())
+    </insert>
+    <insert id="saveLogByMap" parameterType="map">
+        insert into logsql(
+        <foreach collection="map" item="value" index="key" separator=",">
+            ${key}
+        </foreach>
+        , create_date)
+        values
+        (
+        <foreach collection="map" item="value" index="key" separator=",">
+            #{value}
+        </foreach>
+        ,
+        NOW())
+    </insert>
+</mapper>
