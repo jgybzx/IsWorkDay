@@ -5,6 +5,7 @@ import com.jgybzx.isworkday.config.Holiday;
 import com.jgybzx.isworkday.mappers.DateListMapper;
 import com.jgybzx.isworkday.model.*;
 import com.jgybzx.isworkday.utils.HolidayUtil;
+import com.jgybzx.isworkday.utils.WeekEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Jgybzx
@@ -39,7 +42,7 @@ public class IsHolidayController {
     public static final int SUNDAY = 7;
 
     @GetMapping("/today")
-    public String isHoliday() {
+    public Map<String, Object> isHoliday() {
         LocalDate now = LocalDate.now();
         String date = request.getHeader("date");
         now = (StringUtils.isEmpty(date)) ? now : LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -47,13 +50,16 @@ public class IsHolidayController {
         String lastDay = now.with(TemporalAdjusters.lastDayOfMonth()).toString();
         String currentDay = now.toString();
         DateList dateList = mapper.isHoliday(currentDay);
+        Map<String, Object> result = new HashMap<>(16);
+        int value = now.getDayOfWeek().getValue();
         if (!ObjectUtils.isEmpty(dateList)) {
             String status = dateList.getStatus();
-            return ("1".equals(status) ? "今天不上班" : "今天虽然是周末，但是调休上班");
+            result.put("info", ("1".equals(status) ? "今天不上班" : "今天虽然是周末，但是调休上班"));
         } else {
-            int value = now.getDayOfWeek().getValue();
-            return (value == SATURDAY || value == SUNDAY) ? "今天周末不上班" : "今天上班";
+            result.put("info", (value == SATURDAY || value == SUNDAY) ? "今天周末不上班" : "今天上班");
         }
+        result.put("weekDay",WeekEnum.getNameByValue(value));
+        return result;
     }
 
     @Scheduled(cron = "0 0 2 1 * ? ")
@@ -75,6 +81,8 @@ public class IsHolidayController {
     public static void main(String[] args) {
         LocalDate now = LocalDate.now();
         System.out.println("now.getDayOfWeek().getValue() = " + now.getDayOfWeek().getValue());
+        WeekEnum mon = WeekEnum.MON;
+        int ordinal = mon.ordinal();
 
     }
 }
