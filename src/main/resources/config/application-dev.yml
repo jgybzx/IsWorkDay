@@ -10,7 +10,7 @@ spring:
     restart:
       enabled: true
   redis:
-    host: 127.0.0.1
+    host: 123.57.218.169
     port: 6379
   servlet:
     multipart:
