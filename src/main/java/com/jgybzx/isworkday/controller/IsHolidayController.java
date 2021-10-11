@@ -59,6 +59,7 @@ public class IsHolidayController {
             result.put("info", (value == SATURDAY || value == SUNDAY) ? "今天周末不上班" : "今天上班");
         }
         result.put("weekDay",WeekEnum.getNameByValue(value));
+        result.put("test","自动化部署测试");
         return result;
     }
 
